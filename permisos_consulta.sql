@@ -1,0 +1,13 @@
+GRANT SELECT ON amongmeme.armors TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.armors_types TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.characters TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.characters_armors TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.characters_items TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.characters_weapons TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.items TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.items_types TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.skills TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.stats TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.weapons TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.weapons_types TO 'consulta'@'localhost';
+GRANT SELECT ON amongmeme.char_item TO 'consulta'@'localhost';
