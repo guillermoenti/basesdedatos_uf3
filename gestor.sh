@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEBUG="1"
+
 clear
 
 echo "Interfaz de gestoría de Amongmeme"
@@ -13,14 +15,14 @@ echo "2.- Mostrar items"
 echo "3.- Crear personaje"
 echo "4.- Crear item"
 echo "5.- Dar item a personaje"
-echo "6.- Salir"
+echo "Q.- Salir"
 echo "--------------------"
 
 read INPUT
 
 clear
 
-if [ "$INPUT" == "6" ] || [ "$INPUT" == "" ]; then
+if [ "$INPUT" == "Q" ] || [ "$INPUT" == "Q" ] || [ "$INPUT" == "" ]; then
 
 	echo "Bai pues"
 	exit 0
@@ -30,66 +32,101 @@ fi
 if [ "$INPUT" == "1" ]; then
 
 	echo "Personajes:"
+	echo "==========="
 
 	echo "select id_character, name from characters" | mysql -u gestor amongmeme
 
-elif [ "$INPUT" == "2" ]; then
+elif [ "$INPUT" == "2" ]; then 
 
-	echo "select id_item, item from items" | mysql -u gestor amongmeme
+	echo "Inventario"
+	echo "=========="
+	echo "¿De qué personaje quieres ver el inventario?"
+
+	read CHAR_ID
+
+	if [ "$CHAR_ID" == "" ]; then
+
+	echo "Has de introducir algún valor"
+	exit 1
+
+	fi
+
+	QUERY="select * from char_item where id_character=$CHAR_ID" 
+	echo $QUERY | mysql -u consulta amongmeme | cut -d $'\t' -f 4
 
 elif [ "$INPUT" == "3" ]; then
 
-	echo "Nombre del personaje:"
+	echo "Creación de personaje:"
+	echo "======================"
+
+	echo -n "Nombre del personaje: "
 	read NAME
 
-	echo "Edad del personaje:"
+	echo -n "Edad del personaje: "
 	read AGE
 
-	echo "Edad de nacimiento del personaje:"
-	read BIRTHDATE
-
-	echo "Puntos de vida del personaje:"
+	echo -n "Puntos de vida del personaje: "
 	read HP
 
-	echo "Género del personaje:"
+	echo -n "Género del personaje [(M)ale, (F)emale, (N)on binary), (O)thers]: "
 	read GENDER
 
-	echo "Estilo de combate del personaje:"
+	echo -n "Estilo de combate del personaje [(M)elee, (R)anged]: "
 	read STYLE
 
-	echo "Puntos de maná del personaje:"
+	echo -n "Puntos de maná del personaje: "
 	read MANA
 
-	echo "Clase del personaje:"
+	echo -n "Clase del personaje [(WA)rrior, (WI)zard, (RA)nger, (PA)ladin]: "
 	read CLASS
 
-	echo "Raza del personaje:"
+	echo -n "Raza del personaje [(HU)man, (UN)dead, (LO)xodon, (CY)borg]: "
 	read RACE
 
-	echo "Puntos de experiencia del persoanje:"
+	echo -n "Puntos de experiencia del persoanje: "
 	read XP
 
-	echo "Nivel del personaje:"
+	echo -n "Nivel del personaje: "
 	read LEVEL
 
-	echo "Altura del personaje:"
+	echo -n "Altura del personaje: "
 	read HEIGHT
 
+	QUERY="INSERT INTO characters (name, age, hp, gender,"
+	QUERY="$QUERY style, mana, class, race, xp, level, height)"	
+	QUERY="$QUERY VALUES ('$NAME', $AGE, $HP, '$GENDER',"
+	QUERY="$QUERY '$STYLE', $MANA, '$CLASS', '$RACE', $XP, $LEVEL, $HEIGHT)" 
+	
+	if [ "$DEBUG" == "1" ]; then
+		echo $QUERY
+	fi
 
-
-	echo "insert into characters (name, age, birthdate, hp, gender, style, mana, class, race, xp, level, height) VALUES ('$NAME', $AGE, $BIRTHDATE, $HP, $GENDER, $STYLE, $MANA, $CLASS, $RACE, $XP, $LEVEL, $HEIGHT)" | mysql -u gestor amongmeme
+	echo $QUERY | mysql -u gestor amongmeme
 	
 
-elif [ "$INPUT" == "4" ]; then
+#elif [ "$INPUT" == "4" ]; then
 
 
 
 elif [ "$INPUT" == "5" ]; then
 
+	echo "SELECT id_item, item FROM items" | mysql -u gestor amongmeme
 
+	echo "Selecciona el ID del Item que quieres dar: "
+	read ID_ITEM
+
+
+	echo "SELECT id_character, name FROM characters" | mysql -u gestor amongmeme
+
+	echo "Selecciona el ID del Personaje al que quieres dar el item: "
+	read ID_CHARACTER
+
+	QUERY="INSERT INTO characters_items (id_character, id_item)"
+	QUERY="$QUERY VALUES ($ID_CHARACTER, $ID_ITEM)"
+	echo $QUERY | mysql -u gestor amongmeme
 
 else
 
-
+	echo "Opción incorrecta"
 
 fi
