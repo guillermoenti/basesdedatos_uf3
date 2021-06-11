@@ -15,6 +15,7 @@ echo "2.- Mostrar items"
 echo "3.- Crear personaje"
 echo "4.- Crear item"
 echo "5.- Dar item a personaje"
+echo "6.- Eliminar personaje"
 echo "Q.- Salir"
 echo "--------------------"
 
@@ -34,7 +35,7 @@ if [ "$INPUT" == "1" ]; then
 	echo "Personajes:"
 	echo "==========="
 
-	echo "select id_character, name from characters" | mysql -u gestor amongmeme
+	echo "select id_character, name from characters" | mysql -u enti -penti amongmeme
 
 elif [ "$INPUT" == "2" ]; then 
 
@@ -125,8 +126,23 @@ elif [ "$INPUT" == "5" ]; then
 	QUERY="$QUERY VALUES ($ID_CHARACTER, $ID_ITEM)"
 	echo $QUERY | mysql -u gestor amongmeme
 
-else
 
+elif [ "$INPUT" == "6" ]; then
+
+	echo "Introduce el nombre de personaje a borrar: "
+	read CHARACTER
+
+
+	CHAR_NUMBER=`echo -n "$CHARACTER" | wc -m`
+
+	if [ $CHAR_NUMBER -lt 4 ]; then
+		echo "Error, nombre de personaje demasiado corto."
+		return 1
+	fi
+	
+	echo "DELETE FROM CHARACTERS WHERE name LIKE '$CHARACTER'" | mysql -u enti -penti amongmeme
+
+else
 	echo "Opción incorrecta"
 
 fi
